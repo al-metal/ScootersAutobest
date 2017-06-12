@@ -52,12 +52,18 @@ namespace ScootersAutobest
                 return;
             }
 
+            List<string> scooters = new List<string>();
+
             string otv = webRequest.getRequest("https://bike18.ru/products/category/skutery-iz-yaponii?page=all");
             MatchCollection product = new Regex("(?<=<a href=\").*(?=\"><div class=\"-relative item-image\")").Matches(otv);
             for (int n = 0; product.Count > n; n++)
             {
                 string urlTovar = product[n].ToString();
                 List<string> listProduct = nethouse.GetProductList(cookieNethouse, urlTovar);
+                string article = listProduct[6].ToString();
+
+                scooters.Add(article);
+                
             }
         }
 
