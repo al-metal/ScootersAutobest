@@ -52,6 +52,35 @@ namespace ScootersAutobest
                 return;
             }
 
+
+            string otvAvtobest = webRequest.getRequestEncod("http://avtobest-moto.ru/?mc=sh&ct=2&ctype_moto=143&page=1");
+
+            string pagesStr = new Regex("(?<=Страницы:).*(?=</div>)").Match(otvAvtobest).ToString();
+            MatchCollection pages = new Regex("(?<=\">).*(?=</a>)").Matches(pagesStr);
+            List<string> avtobest = new List<string>();
+            int i = -1;
+            do
+            {
+                i++;
+                if (i != 0)
+                {
+                    otvAvtobest = webRequest.getRequestEncod("http://avtobest-moto.ru/?mc=sh&ct=2&ctype_moto=143&page=" + pages[i - 1].ToString());
+                }
+
+                MatchCollection tableAvtobestTovar = new Regex("(?<=<tr>)[\\w\\W]*?(?=</tr>)").Matches(otvAvtobest);
+                foreach (Match s in tableAvtobestTovar)
+                {
+                    string str = s.ToString();
+                    string art = new Regex("(?<=<td><span class=\"green\">).*?(?=</span>)").Match(str).ToString();
+                    string url = new Regex("(?<=<td><a href=\").*(?=\">)").Match(str).ToString();
+                    url = "http://avtobest-moto.ru" + url;
+                    avtobest.Add(art + ";" + url);
+                }
+
+            } while (pages.Count > i);
+
+            
+
             List<string> scooters = new List<string>();
 
             string otv = webRequest.getRequest("https://bike18.ru/products/category/skutery-iz-yaponii?page=all");
