@@ -90,10 +90,32 @@ namespace ScootersAutobest
                 string urlTovar = product[n].ToString();
                 List<string> listProduct = nethouse.GetProductList(cookieNethouse, urlTovar);
                 string article = listProduct[6].ToString();
+                bool b = false;
+                foreach (string str in avtobest)
+                {
+                    string[] s = str.Split(';');
+                    string articleAB = s[0].ToString();
+                    
+                    if (article.Contains(articleAB))
+                    {
+                        b = true;
+                        break;
+                    }
 
+                    if (!b)
+                    {
+                        nethouse.DeleteProduct(cookieNethouse, urlTovar);
+                        break;
+                    }
+                        
+                }
+
+                if(b)
                 scooters.Add(article);
-                
             }
+
+            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
