@@ -1,9 +1,11 @@
 ﻿using Bike18;
+using RacerMotors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -19,6 +21,7 @@ namespace ScootersAutobest
         Thread forms;
         nethouse nethouse = new nethouse();
         httpRequest webRequest = new httpRequest();
+        FileEdit files = new FileEdit();
 
         public Form1()
         {
@@ -35,6 +38,7 @@ namespace ScootersAutobest
 
             #region Обработка сайта
 
+            File.Delete("scooters.csv");
             Thread tabl = new Thread(() => ActualSooters());
             forms = tabl;
             forms.IsBackground = true;
@@ -115,7 +119,28 @@ namespace ScootersAutobest
             }
 
             
+            foreach (string str in avtobest)
+            {
+                List<string> final = new List<string>();
+                string[] s = str.Split(';');
+                string articleAB = s[0].ToString();
+                string urlAB = s[1].ToString();
+                bool b = false;
+                foreach(string strB18 in scooters)
+                {
+                    if (articleAB.Contains(strB18))
+                    {
+                        b = true;
+                        break;
+                    }
+                }
 
+                if (!b)
+                {
+                    final.Add(urlAB);
+                    files.fileWriterCSV(final, "scooters");
+                }
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
