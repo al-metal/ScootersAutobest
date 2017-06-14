@@ -179,6 +179,7 @@ namespace ScootersAutobest
             tbLogin.Invoke(new Action(() => tbLogin.Enabled = false));
             tbPassword.Invoke(new Action(() => tbPassword.Enabled = false));
             tbHistory.Invoke(new Action(() => tbHistory.Enabled = false));
+            menuStrip1.Invoke(new Action(() => menuStrip1.Enabled = false));
         }
 
         private void ControlsFormEnabledTrue()
@@ -187,6 +188,17 @@ namespace ScootersAutobest
             tbLogin.Invoke(new Action(() => tbLogin.Enabled = true));
             tbPassword.Invoke(new Action(() => tbPassword.Enabled = true));
             tbHistory.Invoke(new Action(() => tbHistory.Enabled = false));
+            menuStrip1.Invoke(new Action(() => menuStrip1.Enabled = true));
+        }
+
+        private void закрытьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Разработка программы: al-metal\ne-mail: al-metal@bk.ru", "О программе");
         }
     }
 }
