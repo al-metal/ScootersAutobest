@@ -49,13 +49,14 @@ namespace ScootersAutobest
 
         private void ActualSooters()
         {
+            ControlsFormEnabledFalse();
             CookieContainer cookieNethouse = nethouse.CookieNethouse(tbLogin.Text, tbPassword.Text);
             if (cookieNethouse.Count == 1)
             {
                 MessageBox.Show("Логин или пароль для сайта Nethouse введены не верно", "Ошибка логина/пароля");
+                ControlsFormEnabledTrue();
                 return;
             }
-
 
             string otvAvtobest = webRequest.getRequestEncod("http://avtobest-moto.ru/?mc=sh&ct=2&ctype_moto=143&page=1");
 
@@ -85,8 +86,6 @@ namespace ScootersAutobest
 
             } while (pages.Count > i);
 
-            
-
             List<string> scooters = new List<string>();
 
             string otv = webRequest.getRequest("https://bike18.ru/products/category/skutery-iz-yaponii?page=all");
@@ -96,6 +95,7 @@ namespace ScootersAutobest
                 string urlTovar = product[n].ToString();
                 List<string> listProduct = nethouse.GetProductList(cookieNethouse, urlTovar);
                 string article = listProduct[6].ToString();
+                string priceB18 = listProduct[9].ToString();
                 bool b = false;
                 string priceAB = "";
                 foreach (string str in avtobest)
@@ -115,17 +115,16 @@ namespace ScootersAutobest
                         nethouse.DeleteProduct(cookieNethouse, urlTovar);
                         break;
                     }
-                        
                 }
 
                 if (b)
                 {
                     scooters.Add(article);
-                    if(priceAB != "")
-                    UpdatePriceBike18(cookieNethouse, priceAB, listProduct);
+                    if (priceAB != "" && priceAB != priceB18)
+                        UpdatePriceBike18(cookieNethouse, priceAB, listProduct);
                 }
             }
-            
+
             foreach (string str in avtobest)
             {
                 List<string> final = new List<string>();
@@ -133,7 +132,7 @@ namespace ScootersAutobest
                 string articleAB = s[0].ToString();
                 string urlAB = s[1].ToString();
                 bool b = false;
-                foreach(string strB18 in scooters)
+                foreach (string strB18 in scooters)
                 {
                     if (articleAB.Contains(strB18))
                     {
@@ -148,6 +147,8 @@ namespace ScootersAutobest
                     files.fileWriterCSV(final, "scooters");
                 }
             }
+
+            ControlsFormEnabledTrue();
         }
 
         private void UpdatePriceBike18(CookieContainer cookieNethouse, string priceAB, List<string> listProduct)
@@ -162,6 +163,20 @@ namespace ScootersAutobest
         {
             tbLogin.Text = Properties.Settings.Default.login;
             tbPassword.Text = Properties.Settings.Default.password;
+        }
+
+        private void ControlsFormEnabledFalse()
+        {
+            button1.Invoke(new Action(() => button1.Enabled = false));
+            tbLogin.Invoke(new Action(() => tbLogin.Enabled = false));
+            tbPassword.Invoke(new Action(() => tbPassword.Enabled = false));
+        }
+
+        private void ControlsFormEnabledTrue()
+        {
+            button1.Invoke(new Action(() => button1.Enabled = true));
+            tbLogin.Invoke(new Action(() => tbLogin.Enabled = true));
+            tbPassword.Invoke(new Action(() => tbPassword.Enabled = true));
         }
     }
 }
