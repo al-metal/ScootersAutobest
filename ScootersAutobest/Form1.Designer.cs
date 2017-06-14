@@ -32,6 +32,7 @@
             this.tbLogin = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
+            this.tbHistory = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,19 +72,30 @@
             this.tbPassword.TabIndex = 2;
             this.tbPassword.UseSystemPasswordChar = true;
             // 
+            // tbHistory
+            // 
+            this.tbHistory.Location = new System.Drawing.Point(12, 71);
+            this.tbHistory.Multiline = true;
+            this.tbHistory.Name = "tbHistory";
+            this.tbHistory.Size = new System.Drawing.Size(300, 315);
+            this.tbHistory.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(325, 280);
+            this.ClientSize = new System.Drawing.Size(325, 398);
+            this.Controls.Add(this.tbHistory);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Скутеры автобест";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -93,6 +105,7 @@
         private System.Windows.Forms.TextBox tbLogin;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox tbPassword;
+        private System.Windows.Forms.TextBox tbHistory;
     }
 }
 

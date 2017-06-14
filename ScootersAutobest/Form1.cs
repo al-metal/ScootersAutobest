@@ -30,6 +30,7 @@ namespace ScootersAutobest
 
         private void button1_Click(object sender, EventArgs e)
         {
+            tbHistory.Invoke(new Action(() => tbHistory.Clear()));
             #region Сохранение паролей
             Properties.Settings.Default.login = tbLogin.Text;
             Properties.Settings.Default.password = tbPassword.Text;
@@ -45,6 +46,7 @@ namespace ScootersAutobest
             forms.Start();
 
             #endregion
+
         }
 
         private void ActualSooters()
@@ -57,6 +59,7 @@ namespace ScootersAutobest
                 ControlsFormEnabledTrue();
                 return;
             }
+            tbHistory.Invoke(new Action(() => tbHistory.AppendText("Авторизация пройдена\n")));
 
             string otvAvtobest = webRequest.getRequestEncod("http://avtobest-moto.ru/?mc=sh&ct=2&ctype_moto=143&page=1");
 
@@ -64,6 +67,7 @@ namespace ScootersAutobest
             MatchCollection pages = new Regex("(?<=\">).*(?=</a>)").Matches(pagesStr);
             List<string> avtobest = new List<string>();
             int i = -1;
+            tbHistory.Invoke(new Action(() => tbHistory.AppendText("Получение товаров с сайта автобест\n")));
             do
             {
                 i++;
@@ -85,11 +89,13 @@ namespace ScootersAutobest
                 }
 
             } while (pages.Count > i);
+            tbHistory.Invoke(new Action(() => tbHistory.AppendText("Товары с автобест обработаны\n")));
 
             List<string> scooters = new List<string>();
 
             string otv = webRequest.getRequest("https://bike18.ru/products/category/skutery-iz-yaponii?page=all");
             MatchCollection product = new Regex("(?<=<a href=\").*(?=\"><div class=\"-relative item-image\")").Matches(otv);
+            tbHistory.Invoke(new Action(() => tbHistory.AppendText("Получение товаров с сайта байк18\n")));
             for (int n = 0; product.Count > n; n++)
             {
                 string urlTovar = product[n].ToString();
@@ -125,6 +131,8 @@ namespace ScootersAutobest
                 }
             }
 
+            tbHistory.Invoke(new Action(() => tbHistory.AppendText("Создание списка новых товаров\n")));
+
             foreach (string str in avtobest)
             {
                 List<string> final = new List<string>();
@@ -147,7 +155,7 @@ namespace ScootersAutobest
                     files.fileWriterCSV(final, "scooters");
                 }
             }
-
+            tbHistory.Invoke(new Action(() => tbHistory.AppendText("Файл с новыми товара находиться в папке с программой\n")));
             ControlsFormEnabledTrue();
         }
 
@@ -170,6 +178,7 @@ namespace ScootersAutobest
             button1.Invoke(new Action(() => button1.Enabled = false));
             tbLogin.Invoke(new Action(() => tbLogin.Enabled = false));
             tbPassword.Invoke(new Action(() => tbPassword.Enabled = false));
+            tbHistory.Invoke(new Action(() => tbHistory.Enabled = false));
         }
 
         private void ControlsFormEnabledTrue()
@@ -177,6 +186,7 @@ namespace ScootersAutobest
             button1.Invoke(new Action(() => button1.Enabled = true));
             tbLogin.Invoke(new Action(() => tbLogin.Enabled = true));
             tbPassword.Invoke(new Action(() => tbPassword.Enabled = true));
+            tbHistory.Invoke(new Action(() => tbHistory.Enabled = false));
         }
     }
 }
