@@ -78,7 +78,9 @@ namespace ScootersAutobest
                     string art = new Regex("(?<=<td><span class=\"green\">).*?(?=</span>)").Match(str).ToString();
                     string url = new Regex("(?<=<td><a href=\").*(?=\">)").Match(str).ToString();
                     url = "http://avtobest-moto.ru" + url;
-                    avtobest.Add(art + ";" + url);
+                    string price = new Regex("(?<=class=\"red\"><b>).*(?= руб.</b>)").Match(str).ToString();
+                    price = price.Replace(" ", "");
+                    avtobest.Add(art + ";" + url + ";" + price);
                 }
 
             } while (pages.Count > i);
@@ -95,11 +97,13 @@ namespace ScootersAutobest
                 List<string> listProduct = nethouse.GetProductList(cookieNethouse, urlTovar);
                 string article = listProduct[6].ToString();
                 bool b = false;
+                string priceAB = "";
                 foreach (string str in avtobest)
                 {
                     string[] s = str.Split(';');
                     string articleAB = s[0].ToString();
-                    
+                    priceAB = s[2].ToString();
+
                     if (article.Contains(articleAB))
                     {
                         b = true;
@@ -114,10 +118,13 @@ namespace ScootersAutobest
                         
                 }
 
-                if(b)
-                scooters.Add(article);
+                if (b)
+                {
+                    scooters.Add(article);
+                    if(priceAB != "")
+                    UpdatePriceBike18(cookieNethouse, priceAB, listProduct);
+                }
             }
-
             
             foreach (string str in avtobest)
             {
@@ -141,6 +148,14 @@ namespace ScootersAutobest
                     files.fileWriterCSV(final, "scooters");
                 }
             }
+        }
+
+        private void UpdatePriceBike18(CookieContainer cookieNethouse, string priceAB, List<string> listProduct)
+        {
+            int price = Convert.ToInt32(priceAB);
+            price = price - 100;
+            listProduct[9] = price.ToString();
+            nethouse.SaveTovar(cookieNethouse, listProduct);
         }
 
         private void Form1_Load(object sender, EventArgs e)
